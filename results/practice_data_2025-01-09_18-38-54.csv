@@ -1,0 +1,2 @@
+type_s,session,phase,trial,block,choice_stage1,reaction_time_stage1,transition,second_state,choice_stage2,reaction_time_stage2,reward,prob1_1,prob1_2,prob2_1,prob2_2
+A,1,practice,1,1,2,0.4471066999976756,common,pink,2,0.4870738000026904,True,0.393391402321868,0.355873715590208,0.398362378915012,0.438755204000564

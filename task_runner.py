@@ -185,8 +185,7 @@ def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, tri
 
         # Break after blocks1
         if (trial + 1) % block_size == 0 and trial + 1 != num_trials and phase=="experiment":
-            block_number = (trial // block_size) + 1
-            break_text = visual.TextStim(win, text= f"סיום בלוק {block_number}. קח הפסקה!\nלחץ על כל מקש כדי להמשיך."[::-1], pos=(0, 0), color="black")
+            break_text = visual.TextStim(win, text="הפסקה - קרא לנסיין"[::-1],pos=(0, 0), color="black",height=0.05)
             break_text.draw()
             win.flip()
             event.waitKeys()

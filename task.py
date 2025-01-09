@@ -16,7 +16,8 @@ dlg = gui.DlgFromDict(info, title='INFO', order=order)
 
 if not dlg.OK:  # If the user cancels the dialog
     core.quit()
-
+if not info['subject_number'] or not info['session_number'] or not info['type_s']:
+    raise ValueError("Participant details not provided.")
 # Access the values from the 'info' dictionary
 subject_number = int(info['subject_number'])  # Get and convert the subject number
 session_number = int(info['session_number'])  # Get the session number as a string
@@ -40,7 +41,7 @@ win.flip()
 event.waitKeys()
 # Practice Task
 practice_trials_data = []
-run_task(win,type_s,session_number, num_trials=4, phase="practice", random_walk_data=random_walk_practice, trial_data_list=practice_trials_data)
+run_task(win,type_s,session_number, num_trials=1, phase="practice", random_walk_data=random_walk_practice, trial_data_list=practice_trials_data)
 
 # Save Practice Data
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
