@@ -6,7 +6,7 @@ import pandas as pd
 from utils import check_for_esc
 
     
-def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, trial_data_list, block_size=2):
+def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, trial_data_list, block_size=50):
     for trial in range(num_trials):
         check_for_esc(win)
         # Show fixation cross
