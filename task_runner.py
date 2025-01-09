@@ -3,13 +3,10 @@ from psychopy import visual, core, event
 import random
 import pandas as pd
 
-def check_for_esc(win):
-    """Check if Esc key is pressed and quit if detected."""
-    if "escape" in event.getKeys(keyList=["escape"]):
-        win.close()  # Close the window
-        core.quit()  # Exit the task immediately
+from utils import check_for_esc
 
-def run_task(win, num_trials, phase, random_walk_data, trial_data_list, block_size=2):
+    
+def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, trial_data_list, block_size=2):
     for trial in range(num_trials):
         check_for_esc(win)
         # Show fixation cross
@@ -21,8 +18,10 @@ def run_task(win, num_trials, phase, random_walk_data, trial_data_list, block_si
 
         # Stage 1
         locs1 = "1_2" if random.random() < 0.5 else "2_1"
-        carpetA = visual.ImageStim(win, image="images/carpetA_1.png", pos=(-0.5, 0) if locs1 == "1_2" else (0.5, 0))
-        carpetB = visual.ImageStim(win, image="images/carpetB_1.png", pos=(0.5, 0) if locs1 == "1_2" else (-0.5, 0))
+        carpetA_image = f"images/session_{session_number}/carpetA.png"
+        carpetB_image = f"images/session_{session_number}/carpetB.png"
+        carpetA = visual.ImageStim(win, image=carpetA_image, pos=(-0.5, 0) if locs1 == "1_2" else (0.5, 0))
+        carpetB = visual.ImageStim(win, image=carpetB_image, pos=(0.5, 0) if locs1 == "1_2" else (-0.5, 0))
         carpetA.draw()
         carpetB.draw()
         fixation.draw()
@@ -47,6 +46,8 @@ def run_task(win, num_trials, phase, random_walk_data, trial_data_list, block_si
             core.wait(2)
             check_for_esc(win)
             trial_data = {
+                'type_s': type_s,
+                'session': session_number,
                 'phase': phase,
                 'trial': trial + 1,
                 'block': (trial // block_size) + 1,  # Block number
@@ -82,13 +83,22 @@ def run_task(win, num_trials, phase, random_walk_data, trial_data_list, block_si
         check_for_esc(win)
         # Determine transition
         transition = "common" if random.random() < 0.7 else "rare"
-        second_state = "blue" if ((choice_stage1 == "A" and transition == "common") or 
-                                   (choice_stage1 == "B" and transition == "rare")) else "pink"
+        if session_number == 1:
+            state_mapping = {"common_A": "blue", "rare_B": "blue", "common_B": "pink", "rare_A": "pink"}
+        elif session_number == 2:
+            state_mapping = {"common_A": "green", "rare_B": "green", "common_B": "orange", "rare_A": "orange"}
+        else:
+            raise ValueError("Unsupported session number")
+        # Construct the key for mapping
+        state_key = f"{transition}_{'A' if choice_stage1 == 1 else 'B'}"
+        second_state = state_mapping[state_key]
 
         # Stage 2
         locs2 = "1_2" if random.random() < 0.5 else "2_1"
-        option1 = visual.ImageStim(win, image=f"images/lamp_{second_state}_1.png", pos=(-0.5, 0) if locs2 == "1_2" else (0.5, 0))
-        option2 = visual.ImageStim(win, image=f"images/lamp_{second_state}_2.png", pos=(0.5, 0) if locs2 == "1_2" else (-0.5, 0))
+        option1_image = f"images/session_{session_number}/lamp_{second_state}_1.png"
+        option2_image = f"images/session_{session_number}/lamp_{second_state}_2.png"
+        option1 = visual.ImageStim(win, image=option1_image, pos=(-0.5, 0) if locs2 == "1_2" else (0.5, 0))
+        option2 = visual.ImageStim(win, image=option2_image, pos=(0.5, 0) if locs2 == "1_2" else (-0.5, 0))
         option1.draw()
         option2.draw()
         fixation.draw()
@@ -112,6 +122,8 @@ def run_task(win, num_trials, phase, random_walk_data, trial_data_list, block_si
             core.wait(2)
             check_for_esc(win)
             trial_data = {
+                'type_s': type_s,
+                'session': session_number,
                 'phase': phase,
                 'trial': trial + 1,
                 'block': (trial // block_size) + 1,
@@ -152,6 +164,8 @@ def run_task(win, num_trials, phase, random_walk_data, trial_data_list, block_si
 
         # Save trial data
         trial_data = {
+            'type_s': type_s,
+            'session': session_number,
             'phase': phase,
             'trial': trial + 1,
             'block': (trial // block_size) + 1,  # Block number
