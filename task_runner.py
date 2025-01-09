@@ -58,10 +58,10 @@ def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, tri
                 'choice_stage2': None,
                 'reaction_time_stage2': None,
                 'reward': None ,
-                'prob1_1': random_walk_data.iloc[trial, 0],
-                'prob1_2': random_walk_data.iloc[trial, 1],
-                'prob2_1': random_walk_data.iloc[trial, 2],
-                'prob2_2': random_walk_data.iloc[trial, 3]
+                'prob1_1': random_walk_data.iloc[0,trial],
+                'prob1_2': random_walk_data.iloc[1,trial],
+                'prob2_1': random_walk_data.iloc[2,trial],
+                'prob2_2': random_walk_data.iloc[3,trial]
             }
             trial_data_list.append(trial_data)
             continue  # Skip the rest of the trial and go to the next trial
@@ -82,7 +82,7 @@ def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, tri
         core.wait(1)
         check_for_esc(win)
         # Determine transition
-        transition = "common" if random.random() < 0.7 else "rare"
+        transition = "common" if random.random() < 0.99 else "rare"
         if session_number == 1:
             state_mapping = {"common_A": "blue", "rare_B": "blue", "common_B": "pink", "rare_A": "pink"}
         elif session_number == 2:
@@ -134,10 +134,10 @@ def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, tri
                 'choice_stage2': None,
                 'reaction_time_stage2': None,
                 'reward': None,
-                'prob1_1': random_walk_data.iloc[trial, 0],
-                'prob1_2': random_walk_data.iloc[trial, 1],
-                'prob2_1': random_walk_data.iloc[trial, 2],
-                'prob2_2': random_walk_data.iloc[trial, 3]
+                'prob1_1': random_walk_data.iloc[0,trial],
+                'prob1_2': random_walk_data.iloc[1,trial],
+                'prob2_1': random_walk_data.iloc[2,trial],
+                'prob2_2': random_walk_data.iloc[3,trial]
             }
             trial_data_list.append(trial_data)
             continue  # Skip the rest of the trial and go to the next trial
@@ -152,8 +152,7 @@ def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, tri
 
         # Feedback
         ch_card_2 = choice_stage2 + 2 if second_state == "pink" else choice_stage2
-        current_probs = random_walk_data.iloc[trial, :]
-        reward = random.random() < current_probs[ch_card_2]
+        reward = random.random() < random_walk_data.iloc[ch_card_2-1, trial]
         feedback_image = visual.ImageStim(win, image="images/genie.png" if reward else "images/zero.png",pos=(0, 0.5))
         feedback_image.draw()
         fixation.draw()
@@ -176,10 +175,10 @@ def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, tri
             'choice_stage2': choice_stage2,
             'reaction_time_stage2': rt2,
             'reward': reward,
-            'prob1_1': current_probs[0],
-            'prob1_2': current_probs[1],
-            'prob2_1': current_probs[2],
-            'prob2_2': current_probs[3]
+                'prob1_1': random_walk_data.iloc[0,trial],
+                'prob1_2': random_walk_data.iloc[1,trial],
+                'prob2_1': random_walk_data.iloc[2,trial],
+                'prob2_2': random_walk_data.iloc[3,trial]
         }
         trial_data_list.append(trial_data)
 

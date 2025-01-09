@@ -41,11 +41,14 @@ win.flip()
 event.waitKeys()
 # Practice Task
 practice_trials_data = []
-run_task(win,type_s,session_number, num_trials=10, phase="practice", random_walk_data=random_walk_practice, trial_data_list=practice_trials_data)
+run_task(win,type_s,session_number, num_trials=1, phase="practice", random_walk_data=random_walk_practice, trial_data_list=practice_trials_data)
 
 # Save Practice Data
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-practice_file = os.path.join("results", f"practice_data_{timestamp}.csv")
+practice_file=os.path.join(
+    "results",
+    f"practice_data_subject_{subject_number}_session_{session_number}_type_{type_s}_{timestamp}.csv"
+)
 pd.DataFrame(practice_trials_data).to_csv(practice_file, index=False)
 
 #End practice
@@ -60,8 +63,19 @@ win.flip()
 event.waitKeys()
 # Main Experiment Task
 experiment_trials_data = []
-run_task(win,type_s,session_number ,num_trials=200, phase="experiment", random_walk_data=random_walk_exp, trial_data_list=experiment_trials_data,block_size=50)
+run_task(win,type_s,session_number ,num_trials=4, phase="experiment", random_walk_data=random_walk_exp, trial_data_list=experiment_trials_data,block_size=50)
 
 # Save Experiment Data
-experiment_file = os.path.join("results", f"experiment_data_{timestamp}.csv")
+experiment_file = os.path.join(
+    "results",
+    f"experiment_data_subject_{subject_number}_session_{session_number}_type_{type_s}_{timestamp}.csv"
+)
 pd.DataFrame(experiment_trials_data).to_csv(experiment_file, index=False)
+#End experiment
+end_practice_text = "הניסוי הסתיים."[::-1]
+
+# Display the message
+end_practice = visual.TextStim(win, text=end_practice_text, pos=(0, 0), color="black",height=0.05)
+end_practice.draw()
+win.flip()
+
