@@ -78,4 +78,5 @@ end_practice_text = "הניסוי הסתיים."[::-1]
 end_practice = visual.TextStim(win, text=end_practice_text, pos=(0, 0), color="black",height=0.05)
 end_practice.draw()
 win.flip()
+event.waitKeys()
 

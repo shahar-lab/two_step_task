@@ -82,7 +82,7 @@ def run_task(win,type_s,session_number, num_trials, phase, random_walk_data, tri
         core.wait(1)
         check_for_esc(win)
         # Determine transition
-        transition = "common" if random.random() < 0.99 else "rare"
+        transition = "common" if random.random() < 0.7 else "rare"
         if session_number == 1:
             state_mapping = {"common_A": "blue", "rare_B": "blue", "common_B": "pink", "rare_A": "pink"}
         elif session_number == 2:
