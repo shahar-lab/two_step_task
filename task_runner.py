@@ -5,10 +5,10 @@ import pandas as pd
 
 from utils import check_for_esc
 
-    
-def run_task(win,subject_number,type_s,session_number, num_trials, phase, random_walk_data, trial_data_list, block_size=50):
+def run_task(win, subject_number, type_s, session_number, num_trials, phase, random_walk_data, trial_data_list, block_size=50):
     for trial in range(num_trials):
         check_for_esc(win)
+
         # Show fixation cross
         fixation = visual.TextStim(win, text="+", pos=(0, 0), color="black")
         fixation.draw()
@@ -28,6 +28,13 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
         win.flip()
         check_for_esc(win)
 
+        if locs1 == "1_2":
+            left_option1 = 1
+            right_option1 = 2
+        else:
+            left_option1 = 2
+            right_option1 = 1
+
         # Wait for response
         event.clearEvents()
         keys1 = event.waitKeys(keyList=["s", "k"], maxWait=8, timeStamped=core.Clock())
@@ -39,11 +46,10 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
             else:
                 choice_stage1 = 2
         else:
-            # Show "Too Slow" message
             too_slow_text = visual.TextStim(win, text="איטי מדי"[::-1], pos=(0, 0), color="red")
             too_slow_text.draw()
             win.flip()
-            core.wait(2)
+            core.wait(8)
             check_for_esc(win)
             trial_data = {
                 'subject': subject_number,
@@ -51,30 +57,33 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
                 'session': session_number,
                 'phase': phase,
                 'trial': trial + 1,
-                'block': (trial // block_size) + 1,  # Block number
-                'choice_stage1': None,  # No choice made
+                'block': (trial // block_size) + 1,
+                'choice_stage1': None,
                 'reaction_time_stage1': None,
                 'transition': None,
                 'second_state': None,
                 'choice_stage2': None,
                 'reaction_time_stage2': None,
-                'reward': None ,
-                'prob1_1': random_walk_data.iloc[0,trial],
-                'prob1_2': random_walk_data.iloc[1,trial],
-                'prob2_1': random_walk_data.iloc[2,trial],
-                'prob2_2': random_walk_data.iloc[3,trial]
+                'reward': None,
+                'prob1_1': random_walk_data.iloc[0, trial],
+                'prob1_2': random_walk_data.iloc[1, trial],
+                'prob2_1': random_walk_data.iloc[2, trial],
+                'prob2_2': random_walk_data.iloc[3, trial],
+                'left_option1': left_option1,
+                'right_option1': right_option1,
+                'left_option2': None,
+                'right_option2': None
             }
             trial_data_list.append(trial_data)
-            continue  # Skip the rest of the trial and go to the next trial
+            continue
 
         # Show chosen carpet
-        if choice_stage1:
-            chosen_carpet = carpetA if choice_stage1 == 1 else carpetB
-            chosen_carpet.draw()
-            fixation.draw()
-            win.flip()
-            core.wait(0.5)
-            check_for_esc(win)
+        chosen_carpet = carpetA if choice_stage1 == 1 else carpetB
+        chosen_carpet.draw()
+        fixation.draw()
+        win.flip()
+        core.wait(0.5)
+        check_for_esc(win)
 
         # Transition picture
         zzz = visual.ImageStim(win, image="images/zzz.png")
@@ -82,6 +91,7 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
         win.flip()
         core.wait(1)
         check_for_esc(win)
+
         # Determine transition
         transition = "common" if random.random() < 0.7 else "rare"
         if session_number == 1:
@@ -90,7 +100,7 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
             state_mapping = {"common_A": "green", "rare_B": "green", "common_B": "orange", "rare_A": "orange"}
         else:
             raise ValueError("Unsupported session number")
-        # Construct the key for mapping
+
         state_key = f"{transition}_{'A' if choice_stage1 == 1 else 'B'}"
         second_state = state_mapping[state_key]
 
@@ -105,6 +115,14 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
         fixation.draw()
         win.flip()
         check_for_esc(win)
+
+        if locs2 == "1_2":
+            left_option2 = 1
+            right_option2 = 2
+        else:
+            left_option2 = 2
+            right_option2 = 1
+
         # Wait for response
         event.clearEvents()
         keys2 = event.waitKeys(keyList=["s", "k"], maxWait=8, timeStamped=core.Clock())
@@ -116,11 +134,10 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
             else:
                 choice_stage2 = 2
         else:
-            # Show "Too Slow" message
             too_slow_text = visual.TextStim(win, text="Too Slow", pos=(0, 0), color="red")
             too_slow_text.draw()
             win.flip()
-            core.wait(2)
+            core.wait(8)
             check_for_esc(win)
             trial_data = {
                 'subject': subject_number,
@@ -136,13 +153,17 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
                 'choice_stage2': None,
                 'reaction_time_stage2': None,
                 'reward': None,
-                'prob1_1': random_walk_data.iloc[0,trial],
-                'prob1_2': random_walk_data.iloc[1,trial],
-                'prob2_1': random_walk_data.iloc[2,trial],
-                'prob2_2': random_walk_data.iloc[3,trial]
+                'prob1_1': random_walk_data.iloc[0, trial],
+                'prob1_2': random_walk_data.iloc[1, trial],
+                'prob2_1': random_walk_data.iloc[2, trial],
+                'prob2_2': random_walk_data.iloc[3, trial],
+                'left_option1': left_option1,
+                'right_option1': right_option1,
+                'left_option2': left_option2,
+                'right_option2': right_option2
             }
             trial_data_list.append(trial_data)
-            continue  # Skip the rest of the trial and go to the next trial
+            continue
 
         # Show chosen option
         chosen_option = option1 if choice_stage2 == 1 else option2
@@ -154,8 +175,8 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
 
         # Feedback
         ch_card_2 = choice_stage2 + 2 if second_state == "pink" else choice_stage2
-        reward = random.random() < random_walk_data.iloc[ch_card_2-1, trial]
-        feedback_image = visual.ImageStim(win, image="images/genie.png" if reward else "images/zero.png",pos=(0, 0.5))
+        reward = random.random() < random_walk_data.iloc[ch_card_2 - 1, trial]
+        feedback_image = visual.ImageStim(win, image="images/genie.png" if reward else "images/zero.png", pos=(0, 0.5))
         feedback_image.draw()
         fixation.draw()
         chosen_option.draw()
@@ -170,7 +191,7 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
             'session': session_number,
             'phase': phase,
             'trial': trial + 1,
-            'block': (trial // block_size) + 1,  # Block number
+            'block': (trial // block_size) + 1,
             'choice_stage1': choice_stage1,
             'reaction_time_stage1': rt1,
             'transition': transition,
@@ -178,16 +199,20 @@ def run_task(win,subject_number,type_s,session_number, num_trials, phase, random
             'choice_stage2': choice_stage2,
             'reaction_time_stage2': rt2,
             'reward': reward,
-                'prob1_1': random_walk_data.iloc[0,trial],
-                'prob1_2': random_walk_data.iloc[1,trial],
-                'prob2_1': random_walk_data.iloc[2,trial],
-                'prob2_2': random_walk_data.iloc[3,trial]
+            'prob1_1': random_walk_data.iloc[0, trial],
+            'prob1_2': random_walk_data.iloc[1, trial],
+            'prob2_1': random_walk_data.iloc[2, trial],
+            'prob2_2': random_walk_data.iloc[3, trial],
+            'left_option1': left_option1,
+            'right_option1': right_option1,
+            'left_option2': left_option2,
+            'right_option2': right_option2
         }
         trial_data_list.append(trial_data)
 
-        # Break after blocks1
-        if (trial + 1) % block_size == 0 and trial + 1 != num_trials and phase=="experiment":
-            break_text = visual.TextStim(win, text="הפסקה - קרא לנסיין"[::-1],pos=(0, 0), color="black",height=0.05)
+        # Break after blocks
+        if (trial + 1) % block_size == 0 and trial + 1 != num_trials and phase == "experiment":
+            break_text = visual.TextStim(win, text="הפסקה - קרא לנסיין"[::-1], pos=(0, 0), color="black", height=0.05)
             break_text.draw()
             win.flip()
             event.waitKeys()
