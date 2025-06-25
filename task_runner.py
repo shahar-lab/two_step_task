@@ -174,7 +174,7 @@ def run_task(win, subject_number, type_s, session_number, num_trials, phase, ran
         check_for_esc(win)
 
         # Feedback
-        ch_card_2 = choice_stage2 + 2 if second_state == "pink" else choice_stage2
+        ch_card_2 = choice_stage2 + 2 if second_state in ["pink", "orange"] else choice_stage2
         reward = random.random() < random_walk_data.iloc[ch_card_2 - 1, trial]
         feedback_image = visual.ImageStim(win, image="images/genie.png" if reward else "images/zero.png", pos=(0, 0.5))
         feedback_image.draw()
