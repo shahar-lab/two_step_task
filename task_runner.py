@@ -5,16 +5,17 @@ import pandas as pd
 
 from utils import check_for_esc
 
-def run_task(win, subject_number, type_s, session_number, num_trials, phase, random_walk_data, trial_data_list, block_size=50):
+def run_task(win, subject_number, type_s, session_number, num_trials, phase,
+             random_walk_data, trial_data_list, block_size=50, output_filename=None):
     for trial in range(num_trials):
-        check_for_esc(win)
+        check_for_esc(win, trial_data_list, output_filename)
 
         # Show fixation cross
         fixation = visual.TextStim(win, text="+", pos=(0, 0), color="black")
         fixation.draw()
         win.flip()
         core.wait(1.5)
-        check_for_esc(win)
+        check_for_esc(win, trial_data_list, output_filename)
 
         # Stage 1
         locs1 = "1_2" if random.random() < 0.5 else "2_1"
@@ -26,7 +27,7 @@ def run_task(win, subject_number, type_s, session_number, num_trials, phase, ran
         carpetB.draw()
         fixation.draw()
         win.flip()
-        check_for_esc(win)
+        check_for_esc(win, trial_data_list, output_filename)
 
         if locs1 == "1_2":
             left_option1 = 1
@@ -50,7 +51,7 @@ def run_task(win, subject_number, type_s, session_number, num_trials, phase, ran
             too_slow_text.draw()
             win.flip()
             core.wait(8)
-            check_for_esc(win)
+            check_for_esc(win, trial_data_list, output_filename)
             trial_data = {
                 'subject': subject_number,
                 'type_s': type_s,
@@ -83,14 +84,14 @@ def run_task(win, subject_number, type_s, session_number, num_trials, phase, ran
         fixation.draw()
         win.flip()
         core.wait(0.5)
-        check_for_esc(win)
+        check_for_esc(win, trial_data_list, output_filename)
 
         # Transition picture
         zzz = visual.ImageStim(win, image="images/zzz.png")
         zzz.draw()
         win.flip()
         core.wait(1)
-        check_for_esc(win)
+        check_for_esc(win, trial_data_list, output_filename)
 
         # Determine transition
         transition = "common" if random.random() < 0.7 else "rare"
@@ -114,7 +115,7 @@ def run_task(win, subject_number, type_s, session_number, num_trials, phase, ran
         option2.draw()
         fixation.draw()
         win.flip()
-        check_for_esc(win)
+        check_for_esc(win, trial_data_list, output_filename)
 
         if locs2 == "1_2":
             left_option2 = 1
@@ -138,7 +139,7 @@ def run_task(win, subject_number, type_s, session_number, num_trials, phase, ran
             too_slow_text.draw()
             win.flip()
             core.wait(8)
-            check_for_esc(win)
+            check_for_esc(win, trial_data_list, output_filename)
             trial_data = {
                 'subject': subject_number,
                 'type_s': type_s,
@@ -171,7 +172,7 @@ def run_task(win, subject_number, type_s, session_number, num_trials, phase, ran
         fixation.draw()
         win.flip()
         core.wait(0.5)
-        check_for_esc(win)
+        check_for_esc(win, trial_data_list, output_filename)
 
         # Feedback
         ch_card_2 = choice_stage2 + 2 if second_state in ["pink", "orange"] else choice_stage2
@@ -182,7 +183,7 @@ def run_task(win, subject_number, type_s, session_number, num_trials, phase, ran
         chosen_option.draw()
         win.flip()
         core.wait(1.5)
-        check_for_esc(win)
+        check_for_esc(win, trial_data_list, output_filename)
 
         # Save trial data
         trial_data = {

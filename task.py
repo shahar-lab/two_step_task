@@ -11,6 +11,7 @@ from utils import get_random_walk_path
 # Get participant number and session number using the dialog
 info = {'subject_number': '', 'session_number': '', 'type_s': ''}  # Define the dialog box dictionary
 order = ['subject_number', 'session_number','type_s']  # Define the desired order
+timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 dlg = gui.DlgFromDict(info, title='INFO', order=order)
 
@@ -41,7 +42,17 @@ win.flip()
 event.waitKeys()
 # Practice Task
 practice_trials_data = []
-run_task(win,subject_number,type_s,session_number, num_trials=20, phase="practice", random_walk_data=random_walk_practice, trial_data_list=practice_trials_data)
+practice_file = os.path.join(
+    "results",
+    f"practice_data_subject_{subject_number}_session_{session_number}_type_{type_s}_{timestamp}.csv"
+)
+
+run_task(win, subject_number, type_s, session_number,
+         num_trials=20, phase="practice",
+         random_walk_data=random_walk_practice,
+         trial_data_list=practice_trials_data,
+         output_filename=practice_file)
+
 
 # Save Practice Data
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -61,9 +72,19 @@ win.flip()
 
 # Wait for any key to proceed
 event.waitKeys()
-# Main Experiment Task
+# Main Experiment Task 
 experiment_trials_data = []
-run_task(win,subject_number,type_s,session_number ,num_trials=200, phase="experiment", random_walk_data=random_walk_exp, trial_data_list=experiment_trials_data,block_size=50)
+experiment_file = os.path.join(
+    "results",
+    f"experiment_data_subject_{subject_number}_session_{session_number}_type_{type_s}_{timestamp}.csv"
+)
+
+run_task(win, subject_number, type_s, session_number,
+         num_trials=200, phase="experiment",
+         random_walk_data=random_walk_exp,
+         trial_data_list=experiment_trials_data,
+         block_size=50,
+         output_filename=experiment_file)
 
 # Save Experiment Data
 experiment_file = os.path.join(
